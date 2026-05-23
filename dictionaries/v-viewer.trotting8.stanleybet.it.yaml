@@ -1,0 +1,7 @@
+---
+includes:
+  - ../vendor/pgvirtual/game-harness/src/dictionaries/v-viewer.harness8.it
+main_header:
+  game_name: CAVALLI AL TROTTO
+  full_game_name: CAVALLI AL TROTTO
+  tag_real:

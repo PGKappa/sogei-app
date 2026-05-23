@@ -1,0 +1,7 @@
+---
+includes:
+  - ../vendor/pgvirtual/game-dogs/src/dictionaries/v-viewer.dogs8.it
+main_header:
+  game_name: CORSA DI LEVRIERI
+  full_game_name: CORSA DI LEVRIERI
+  tag_real:

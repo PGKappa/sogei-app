@@ -1,0 +1,20 @@
+---
+includes:
+  - ../vendor/pgvirtual/game-dogs/src/dictionaries/v-ui.dogs6.web.it
+misc:
+  name: Corsa di Levrieri
+  tag_real: Reali
+  event_header: 
+    name: Corsa di Levrieri
+  next_event_item:
+    name: Corsa di Levrieri
+  prev_event_item:
+    name: Corsa di Levrieri
+  next_events_by_category:
+    header: Corsa di Levrieri
+  placed_ticket_event_item:
+    name: Corsa di Levrieri
+  ticket_event_item: 
+    name: Corsa di Levrieri
+  streaming:
+    description: Corsa di Levrieri

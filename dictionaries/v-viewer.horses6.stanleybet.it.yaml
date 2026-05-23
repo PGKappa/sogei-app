@@ -1,0 +1,7 @@
+---
+includes:
+  - ../vendor/pgvirtual/game-horses/src/dictionaries/v-viewer.horses6.it
+main_header:
+  game_name: CAVALLI AL GALOPPO
+  full_game_name: CAVALLI AL GALOPPO
+  tag_real:

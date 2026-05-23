@@ -1,0 +1,7 @@
+---
+includes:
+  - ../vendor/pgvirtual/game-dogs/src/dictionaries/v-viewer.dogs6.en
+main_header:
+  game_name: DOG RACING
+  full_game_name: DOG RACING
+  tag_real:

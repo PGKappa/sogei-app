@@ -1,0 +1,7 @@
+---
+includes:
+  - ../vendor/pgvirtual/game-horses/src/dictionaries/v-ui.horses6.web.it
+misc:
+  name: Cavalli al Galoppo
+  tag_real:
+  full_name: Cavalli al Galoppo

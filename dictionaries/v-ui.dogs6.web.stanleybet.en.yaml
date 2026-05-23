@@ -1,0 +1,7 @@
+---
+includes:
+  - ../vendor/pgvirtual/game-dogs/src/dictionaries/v-ui.dogs6.web.en
+misc:
+  name: Dog Racing
+  tag_real:
+  full_name: Dog Racing

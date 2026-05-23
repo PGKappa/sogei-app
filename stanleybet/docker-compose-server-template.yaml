@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  ${PHP_SERVICE}:
+    image: ${PHP_SERVICE}:latest
+    container_name: ${PHP_SERVICE}
+    networks:
+      - ${PARTNER_TAG}_net
+      - localstart_default
+    expose:
+      - 9000
+
+  ${NGINX_SERVICE}:
+    image: ${NGINX_SERVICE}:latest
+    container_name: ${NGINX_SERVICE}
+    depends_on:
+      - ${PHP_SERVICE}
+    networks:
+      - ${PARTNER_TAG}_net
+    ports:
+      - "${API_LISTEN_PORT}:80"
+  ${VIEWER_SERVICE}:
+    image: ${VIEWER_SERVICE}:latest
+    container_name: ${VIEWER_SERVICE}
+    networks:
+      - ${PARTNER_TAG}_net
+    ports:
+      - "${VIEWER_LISTEN_PORT}:80"
+
+networks:
+  ${PARTNER_TAG}_net:
+    driver: bridge
+  localstart_default:
+    external: true

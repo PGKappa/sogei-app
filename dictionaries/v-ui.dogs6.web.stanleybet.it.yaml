@@ -1,0 +1,7 @@
+---
+includes:
+  - ../vendor/pgvirtual/game-dogs/src/dictionaries/v-ui.dogs6.web.it
+misc:
+  name: Corsa di Levrieri
+  tag_real:
+  full_name: Corsa di Levrieri

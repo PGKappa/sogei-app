@@ -1,0 +1,3 @@
+---
+includes:
+  - ../vendor/pgvirtual/game-horses/src/dictionaries/v-ui.horses6.web.it

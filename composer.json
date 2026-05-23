@@ -1,0 +1,184 @@
+{
+    "name": "pgvirtual/app",
+    "version": "1.0.0",
+    "type": "project",
+    "description": "The Laravel Framework.",
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^7.3|^8.0",
+        "doctrine/dbal": "^3.6",
+        "fideloper/proxy": "^4.4",
+        "fruitcake/laravel-cors": "^2.0",
+        "guzzlehttp/guzzle": "^7.0.1",
+        "laravel/framework": "^8.12",
+        "laravel/tinker": "^2.5",
+        "pgvirtual/core": "dev-main",
+        "pgvirtual/game-dogs": "dev-main",
+        "pgvirtual/game-harness": "dev-main",
+        "pgvirtual/game-horses": "dev-main",
+        "predis/predis": "^2.0"
+    },
+    "require-dev": {
+        "facade/ignition": "^2.5",
+        "fakerphp/faker": "^1.9.1",
+        "helmich/phpunit-json-assert": "^3.3",
+        "laravel/sail": "^1.1",
+        "mockery/mockery": "^1.4.2",
+        "nunomaduro/collision": "^5.0",
+        "php-mock/php-mock": "^2.2",
+        "php-mock/php-mock-phpunit": "^2.6",
+        "phpunit/phpunit": "^9.3.3"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "secure-http": false
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi"
+        ],
+        "test:api.init": [
+            "phpunit --testdox tests/Feature/InitializationTest.php"
+        ],
+        "test:api.viewerinit": [
+            "phpunit --testdox tests/Feature/ViewerInitializationTest.php"
+        ],
+        "test:api.eventinfo": [
+            "phpunit --testdox tests/Feature/EventInfoTest.php"
+        ],
+        "test:api.eventlist": [
+            "phpunit --testdox tests/Feature/EventListTest.php"
+        ],
+        "test:api.eventresults": [
+            "phpunit --testdox tests/Feature/EventResultsTest.php"
+        ],
+        "test:dogs.odds": [
+            "phpunit --testdox tests/Feature/DogsOddsTest.php"
+        ],
+        "test:dogs.paymentengine": [
+            "phpunit --filter PaymentEngineTest --process-isolation"
+        ],
+        "test:dogs.paymentenginet": [
+            "phpunit --filter TPaymentEngineTest --process-isolation"
+        ],
+        "test:dogs.rng": [
+            "phpunit --filter ProbabilitiesTest --process-isolation"
+        ],
+        "test": [
+            "phpunit --testdox tests",
+            "@test-pgvirtual-core",
+            "@test-pgvirtual-game-dogs6"
+        ],
+        "test-pgvirtual-core": [
+            "composer install -d vendor/pgvirtual/core || true",
+            "composer test-dict -d vendor/pgvirtual/core"
+        ],
+        "test-pgvirtual-game-dogs6": [
+            "composer test-game-dict -d vendor/pgvirtual/core -- ../game-dogs/tests/"
+        ],
+        "dev": [
+            "composer install",
+            "@composer update pgvirtual/core pgvirtual/manager pgvirtual/game-dogs",
+            "@php artisan migrate:fresh",
+            "@php artisan db:seed",
+            "@php artisan pg:generateEvents"
+        ],
+        "create:harness-repository": [
+            "mkdir vendor/pgvirtual/game-harness || true",
+            "cp -r --remove-destination vendor/pgvirtual/game-dogs/* vendor/pgvirtual/game-harness/",
+            "find vendor/pgvirtual/game-harness/ -type f -print0 |xargs -0 sed -i 's/dogs/harness/g'",
+            "find vendor/pgvirtual/game-harness/ -type f -print0 |xargs -0 sed -i 's/Dogs/harness/g'",
+            "find vendor/pgvirtual/game-harness/ -type f -print0 |xargs -0 sed -i 's/DOGS/Harness/g'",
+            "find vendor/pgvirtual/game-harness/ -type f -print0 |xargs -0 sed -i 's/GREYHOUNDS/Harness/g'",
+            "find vendor/pgvirtual/game-harness/ -type f -print0 |xargs -0 sed -i 's/Corse di Levrieri/Trotto al Galoppo/g'",
+            "find vendor/pgvirtual/game-harness/ -type f -print0 |xargs -0 sed -i 's/Levrieri Reali/Trotto al Galoppo Reali/g'",
+            "find vendor/pgvirtual/game-harness/ -type f -print0 |xargs -0 sed -i 's/Greyhounds/harness/g'",
+            "find vendor/pgvirtual/game-harness/ -type f -print0 |xargs -0 sed -i 's/Dog Racing/Harness Racing/g'",
+            "#add here new row for translations",
+            "find vendor/pgvirtual/game-harness -name '*DOGS*' | while read FILE ; do newfile=\"$(echo ${FILE} |sed -e 's/DOGS/Harness/')\" ; mv \"${FILE}\" \"${newfile}\" ; done",
+            "find vendor/pgvirtual/game-harness -name '*dogs*' | while read FILE ; do newfile=\"$(echo ${FILE} |sed -e 's/dogs/harness/')\" ; mv \"${FILE}\" \"${newfile}\" ; done",
+            "find vendor/pgvirtual/game-harness -name '*Dogs*' | while read FILE ; do newfile=\"$(echo ${FILE} |sed -e 's/Dogs/harness/')\" ; mv \"${FILE}\" \"${newfile}\" ; done",
+            "composer dumpautoload"
+        ],
+        "create:horses-repository": [
+            "mkdir vendor/pgvirtual/game-horses || true",
+            "cp -r --remove-destination vendor/pgvirtual/game-dogs/* vendor/pgvirtual/game-horses/",
+            "find vendor/pgvirtual/game-horses/ -type f -print0 |xargs -0 sed -i 's/dogs/horses/g'",
+            "find vendor/pgvirtual/game-horses/ -type f -print0 |xargs -0 sed -i 's/Dogs/Horses/g'",
+            "find vendor/pgvirtual/game-horses/ -type f -print0 |xargs -0 sed -i 's/DOGS/HORSES/g'",
+            "find vendor/pgvirtual/game-horses/ -type f -print0 |xargs -0 sed -i 's/GREYHOUNDS/HORSES/g'",
+            "find vendor/pgvirtual/game-horses/ -type f -print0 |xargs -0 sed -i 's/Corse di Levrieri/Cavalli al Galoppo/g'",
+            "find vendor/pgvirtual/game-horses/ -type f -print0 |xargs -0 sed -i 's/Levrieri Reali/Cavalli al Galoppo Reali/g'",
+            "find vendor/pgvirtual/game-horses/ -type f -print0 |xargs -0 sed -i 's/Greyhounds/Horses/g'",
+            "find vendor/pgvirtual/game-horses/ -type f -print0 |xargs -0 sed -i 's/Dog Racing/Horse Racing/g'",
+            "#add here new row for translations",
+            "find vendor/pgvirtual/game-horses -name '*DOGS*' | while read FILE ; do newfile=\"$(echo ${FILE} |sed -e 's/DOGS/HORSES/')\" ; mv \"${FILE}\" \"${newfile}\" ; done",
+            "find vendor/pgvirtual/game-horses -name '*dogs*' | while read FILE ; do newfile=\"$(echo ${FILE} |sed -e 's/dogs/horses/')\" ; mv \"${FILE}\" \"${newfile}\" ; done",
+            "find vendor/pgvirtual/game-horses -name '*Dogs*' | while read FILE ; do newfile=\"$(echo ${FILE} |sed -e 's/Dogs/Horses/')\" ; mv \"${FILE}\" \"${newfile}\" ; done",
+            "composer dumpautoload"
+        ],
+        "serveonly": [
+            "#git -C ../core add . && git -C ../core  commit -m \"update\" && git push || true",
+            "#git -C ../games/dogs add . && git -C ../games/dogs commit -m \"update\" && git push || true",
+            "@composer update pgvirtual/core pgvirtual/manager pgvirtual/game-dogs",
+            "@create:horses-repository",
+            "@create:harness-repository",
+            "@php artisan serve --host=0.0.0.0"
+        ],
+        "service:start": [
+            "screen -S TicketPaymentEngine -d -m bash -c \"/usr/bin/php artisan pg:TicketPaymentEngine --debug\"",
+            "screen -S generateResults -d -m bash -c \"/usr/bin/php artisan pg:generateResults\"",
+            "screen -ls"
+        ]
+    },
+    "repositories": {
+        "pgvirtual/core": {
+            "type": "vcs",
+            "url": "https://github.com/PGKappa/sogei-core.git"
+        },
+        "pgvirtual/game-dogs": {
+            "type": "vcs",
+            "url": "https://github.com/PGKappa/sogei-dogs.git"
+        },
+        "pgvirtual/game-harness": {
+            "type": "vcs",
+            "url": "https://github.com/PGKappa/sogei-harness.git"
+        },
+        "pgvirtual/game-horses": {
+            "type": "vcs",
+            "url": "https://github.com/PGKappa/sogei-horses.git"
+        }
+    }
+}

@@ -1,0 +1,60 @@
+version: "3.7"
+services:
+  pgv:
+    build:
+      context: ../.
+      dockerfile: ./localstart/nginx/Dockerfile
+    container_name: pgv
+    ports:
+      - 8080:80
+    depends_on:
+      - php
+  php:
+    build:
+      context: ../.
+      dockerfile: ./localstart/php/Dockerfile
+    container_name: pgv-php
+    command: bash -c "/bin/docker-entrypoint.sh"
+    expose:
+      - 9000
+    depends_on:
+      - mysql
+  mysql:
+    build:
+      context: ../.
+      dockerfile: ./localstart/docker/mysql/Dockerfile
+
+    #restart: always
+    container_name: pgvmysql
+    hostname: pgvmysql
+    ports:
+      - 3306:3306
+    volumes:
+      - mysqldata:/var/lib/mysql
+      # - ./hostname:/etc/hostname
+    environment:
+      - "MYSQL_ROOT_PASSWORD=secret"
+      - "MYSQL_DATABASE=isibet"
+      - "MYSQL_USER=homestead"
+      - "MYSQL_PASSWORD=homestead"
+      - "MYSQL_VERSION=5.7"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      timeout: 10s
+      retries: 10
+
+  phpmyadmin:
+    image: phpmyadmin
+    #restart: always
+    container_name: pgv-phpmyadmin
+    ports:
+      - 8082:80
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: secret
+    depends_on:
+      - mysql
+
+volumes:
+  mysqldata:

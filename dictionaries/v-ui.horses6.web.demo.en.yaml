@@ -1,0 +1,20 @@
+---
+includes:
+  - ../vendor/pgvirtual/game-horses/src/dictionaries/v-ui.horses6.web.en
+misc:
+  name: Horse Racing
+  tag_real: 
+  event_header: 
+    name: Horse Racing
+  next_event_item:
+    name: Horse Racing
+  prev_event_item:
+    name: Horse Racing
+  next_events_by_category:
+    header: Horse Racing
+  placed_ticket_event_item:
+    name: Horse Racing
+  ticket_event_item: 
+    name: Horse Racing
+  streaming:
+    description: Horse Racing

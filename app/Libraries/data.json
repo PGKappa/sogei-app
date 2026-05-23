@@ -1,0 +1,96 @@
+{
+    "platformCode": 84,
+    "games": [
+        {
+            "code": "1",
+            "desc": "CORSA DI LEVRIERI REALI",
+            "racers": [6, 8]
+        },
+        {
+            "code": "2",
+            "desc": "CAVALLI AL GALOPPO REALI",
+            "racers": [6, 8]
+        },
+        {
+            "code": "3",
+            "desc": "CAVALLI AL TROTTO REALI",
+            "racers": [6, 8]
+        }
+    ],
+    "markets": [
+        {
+            "code": "101",
+            "desc": "(VIN)",
+            "marketId": "winner",
+            "rtp": "80.0"
+        },
+        {
+            "code": "102",
+            "desc": "(PIA 2)",
+            "marketId": "placed",
+            "rtp": "90.0"
+        },
+        {
+            "code": "103",
+            "desc": "(PIA 3)",
+            "marketId": "show",
+            "rtp": "80.0"
+        },
+        {
+            "code": "104",
+            "desc": "(ACO)",
+            "marketId": "exacta",
+            "rtp": "80.0"
+        },
+        {
+            "code": "105",
+            "desc": "(ACC)",
+            "marketId": "quinella",
+            "rtp": "80.0"
+        },
+        {
+            "code": "106",
+            "desc": "(TRO)",
+            "marketId": "trifecta",
+            "rtp": "60.0"
+        },
+        {
+            "code": "107",
+            "desc": "(TRE)",
+            "marketId": "boxedtrifecta",
+            "rtp": "90.0"
+        },
+        {
+            "code": "108",
+            "desc": "(P/D)",
+            "marketId": "evenodd",
+            "result": {
+                "even": "1",
+                "odd": "2"
+            },
+            "rtp": "90.0"
+        },
+        {
+            "code": "109",
+            "desc": "(U/O 3.5)",
+            "marketId": "underover",
+            "availableForRacers": 6,
+            "result": {
+                "under": "1",
+                "over": "2"
+            },
+            "rtp": "90.0"
+        },
+        {
+            "code": "110",
+            "desc": "(U/O 4.5)",
+            "marketId": "underover",
+            "availableForRacers": 8,
+            "result": {
+                "under": "1",
+                "over": "2"
+            },
+            "rtp": "90.0"
+        }
+    ]
+}

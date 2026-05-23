@@ -1,0 +1,20 @@
+---
+includes:
+  - ../vendor/pgvirtual/game-dogs/src/dictionaries/v-ui.dogs6.web.en
+misc:
+  name: Dog Racing
+  tag_real: 
+  event_header: 
+    name: Dog Racing
+  next_event_item:
+    name: Dog Racing
+  prev_event_item:
+    name: Dog Racing
+  next_events_by_category:
+    header: Dog Racing
+  placed_ticket_event_item:
+    name: Dog Racing
+  ticket_event_item: 
+    name: Dog Racing
+  streaming:
+    description: Dog Racing

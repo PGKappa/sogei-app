@@ -1,0 +1,36 @@
+version: "3.7"
+services:
+  sta-pgv:
+   
+    build:
+      args:
+        NOME_PARTNER: stanleybet
+      context: ../.
+      dockerfile: ./stanleybet/nginx/Dockerfile
+    container_name: sta-pgv
+    ports:
+      - 8080:80
+    depends_on:
+      - sta-php
+    networks:
+      - sta_net
+      
+  sta-php:
+ 
+    build:
+      args:
+        NOME_PARTNER: stanleybet
+      context: ../.
+      dockerfile: ./stanleybet/php/Dockerfile
+    container_name: sta-php
+    command: bash -c "/bin/docker-entrypoint.sh"
+    expose:
+      - 9000
+    networks:
+      - sta_net
+      - localstart_default
+networks:
+  sta_net:
+    driver: bridge
+  localstart_default:
+    external: true

@@ -1,0 +1,36 @@
+version: "3.7"
+services:
+  ${NGINX_SERVICE}:
+   
+    build:
+      args:
+        NOME_PARTNER: ${NOME_PARTNER}
+      context: ../.
+      dockerfile: ./${NOME_PARTNER}/nginx/Dockerfile
+    container_name: ${NGINX_SERVICE}
+    ports:
+      - ${API_LISTEN_PORT}:80
+    depends_on:
+      - ${PHP_SERVICE}
+    networks:
+      - ${PARTNER_TAG}_net
+      
+  ${PHP_SERVICE}:
+ 
+    build:
+      args:
+        NOME_PARTNER: ${NOME_PARTNER}
+      context: ../.
+      dockerfile: ./${NOME_PARTNER}/php/Dockerfile
+    container_name: ${PHP_SERVICE}
+    command: bash -c "/bin/docker-entrypoint.sh"
+    expose:
+      - 9000
+    networks:
+      - ${PARTNER_TAG}_net
+      - localstart_default
+networks:
+  ${PARTNER_TAG}_net:
+    driver: bridge
+  localstart_default:
+    external: true

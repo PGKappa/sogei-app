@@ -1,0 +1,20 @@
+---
+includes:
+  - ../vendor/pgvirtual/game-horses/src/dictionaries/v-ui.horses6.web.it
+misc:
+  name: Cavalli al Galoppo
+  tag_real: Reali
+  event_header: 
+    name: Cavalli al Galoppo
+  next_event_item:
+    name: Cavalli al Galoppo
+  prev_event_item:
+    name: Cavalli al Galoppo
+  next_events_by_category:
+    header: Cavalli al Galoppo
+  placed_ticket_event_item:
+    name: Cavalli al Galoppo
+  ticket_event_item: 
+    name: Cavalli al Galoppo
+  streaming:
+    description: Cavalli al Galoppo

@@ -1,0 +1,7 @@
+---
+includes:
+  - ../vendor/pgvirtual/game-horses/src/dictionaries/v-viewer.horses6.en
+main_header:
+  game_name: HORSE RACING
+  full_game_name: HORSE RACING
+  tag_real:

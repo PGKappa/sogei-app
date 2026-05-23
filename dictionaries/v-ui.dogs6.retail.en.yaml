@@ -1,0 +1,4 @@
+---
+includes:
+  - ../vendor/pgvirtual/game-dogs/src/dictionaries/v-ui.dogs6.retail.en
+

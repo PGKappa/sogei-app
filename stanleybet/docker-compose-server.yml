@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  sta-php:
+    image: sta-php:latest
+    container_name: sta-php
+    networks:
+      - sta_net
+      - localstart_default
+    expose:
+      - 9000
+
+  sta-pgv:
+    image: sta-pgv:latest
+    container_name: sta-pgv
+    depends_on:
+      - sta-php
+    networks:
+      - sta_net
+    ports:
+      - "8080:80"
+  sta-viewer:
+    image: sta-viewer:latest
+    container_name: sta-viewer
+    networks:
+      - sta_net
+    ports:
+      - "8090:80"
+
+networks:
+  sta_net:
+    driver: bridge
+  localstart_default:
+    external: true
