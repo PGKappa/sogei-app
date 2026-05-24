@@ -5,3 +5,5 @@ localstart
 rootfs-service
 .git
 localhost
+
+composer.lock

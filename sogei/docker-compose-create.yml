@@ -1,36 +1,36 @@
 version: "3.7"
 services:
-  sta-pgv:
+  sog-pgv:
    
     build:
       args:
-        NOME_PARTNER: stanleybet
+        NOME_PARTNER: sogei
       context: ../.
-      dockerfile: ./stanleybet/nginx/Dockerfile
-    container_name: sta-pgv
+      dockerfile: ./sogei/nginx/Dockerfile
+    container_name: sog-pgv
     ports:
-      - 8080:80
+      - 8083:80
     depends_on:
-      - sta-php
+      - sog-php
     networks:
-      - sta_net
+      - sog_net
       
-  sta-php:
+  sog-php:
  
     build:
       args:
-        NOME_PARTNER: stanleybet
+        NOME_PARTNER: sogei
       context: ../.
-      dockerfile: ./stanleybet/php/Dockerfile
-    container_name: sta-php
+      dockerfile: ./sogei/php/Dockerfile
+    container_name: sog-php
     command: bash -c "/bin/docker-entrypoint.sh"
     expose:
       - 9000
     networks:
-      - sta_net
+      - sog_net
       - localstart_default
 networks:
-  sta_net:
+  sog_net:
     driver: bridge
   localstart_default:
     external: true
