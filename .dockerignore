@@ -4,6 +4,7 @@
 localstart
 rootfs-service
 .git
+.gitlab
 localhost
 
 composer.lock

@@ -151,7 +151,15 @@ COPY . /app
 RUN composer install \
     --optimize-autoloader \
     --no-interaction \
-    --no-progress
+    --no-progress \
+    --prefer-dist \
+  && find /app/vendor -name '.git' -type d -exec rm -rf {} + 2>/dev/null; \
+     find /app/vendor -name '.gitlab' -type d -exec rm -rf {} + 2>/dev/null; \
+     find /app/vendor -name '.gitignore' -type f -exec rm -rf {} + 2>/dev/null; \
+     find /app/vendor -name '.gitlab-ci.yml' -type f -exec rm -rf {} + 2>/dev/null; \
+     find /app/vendor -name 'ci' -type d -exec rm -rf {} + 2>/dev/null; \
+     find /app/vendor -name 'tests' -type d -exec rm -rf {} + 2>/dev/null; \
+     true
 
 # continue stage build with the desired image and copy the source including the
 # dependencies downloaded by composer
