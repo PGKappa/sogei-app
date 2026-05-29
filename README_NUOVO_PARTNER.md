@@ -15,6 +15,8 @@
     3) Duplicare la cartella localstart con il nomepartner oppure se già presente rinominare la cartella del partner. Se la cartella del partner è già presente fare attenzione alle immagini presenti nella cartella images. Eliminarle tutte.
     4) portarsi nella cartella del partner, modificare il file create.sh  avendo cura di impostare le variabili al suo interno,
     5) modificare il rigo 32 nel file `./isibet-app/localstart/nginx/default.conf` Modificare la parola pgv-php con "prime3letterepartner"-php . Fare stessa midifica nel file `./isibet-app/rootfs/etc/nginx/default.conf`
+    5.5) impostare il token GitHub per composer `export GITHUB_TOKEN=ghp_yourvalidtokenhere`
+
     6) eseguire il comando `sudo chmod +x create.sh` ed eseguire lo script  `./create.sh` ,  il comando crearà le immagini nella cartella images
     7) spostarsi nella cartella delle immagini docker `cd images`
     8) inviare le immagini appena create e il docker-compose-server.yaml sul server di produzione:

@@ -145,10 +145,12 @@ ENV client_max_body_size=2M \
 
 FROM composer AS composer
 
+ARG GITHUB_TOKEN
 # copying the source directory and install the dependencies with composer
 COPY . /app
 # run composer install to install the dependencies
-RUN composer install \
+RUN composer config -g github-oauth.github.com "${GITHUB_TOKEN}" && \
+    composer install \
     --optimize-autoloader \
     --no-interaction \
     --no-progress \

@@ -1,7 +1,6 @@
 version: "3.7"
 services:
   ${NGINX_SERVICE}:
-   
     build:
       args:
         NOME_PARTNER: ${NOME_PARTNER}
@@ -14,12 +13,12 @@ services:
       - ${PHP_SERVICE}
     networks:
       - ${PARTNER_TAG}_net
-      
+
   ${PHP_SERVICE}:
- 
     build:
       args:
         NOME_PARTNER: ${NOME_PARTNER}
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
       context: ../.
       dockerfile: ./${NOME_PARTNER}/php/Dockerfile
     container_name: ${PHP_SERVICE}

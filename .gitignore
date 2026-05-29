@@ -7,3 +7,6 @@ storage/logs/*
 .phpunit.*
 
 .yarn
+
+# docker-compose files with partner-specific config (may contain secrets)
+sogei/docker-compose-create.yml
