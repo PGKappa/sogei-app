@@ -8,3 +8,5 @@ rootfs-service
 localhost
 
 composer.lock
+
+github_token.txt
