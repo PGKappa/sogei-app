@@ -8,8 +8,9 @@ rootfs-service
 .gitlab
 localhost
 
-composer.lock
 
 github_token.txt
 
 storage/logs/*
+
+vendor

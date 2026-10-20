@@ -104,9 +104,13 @@ ENV client_max_body_size=2M \
     upload_max_filesize=2M \
     zlib_output_compression=On
 
-FROM composer AS composer
+# composer gira sulla stessa PHP 8.2 di produzione (stage "server"): l'immagine
+# composer ufficiale usa l'ultima PHP e Laravel genera warning di deprecazione
+FROM server AS composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+WORKDIR /app
 
-# token GitHub per i repository privati PGKappa/sogei-* (da sogei/.env.docker).
+# token GitHub per i repository privati PGKappa/sogei-* (da sogei/.env).
 # Resta in questo stage: l'immagine finale parte da "server" e non lo contiene.
 ARG GITHUB_TOKEN
 
@@ -120,9 +124,9 @@ RUN mkdir -p /app/bootstrap/cache \
     /app/storage/logs \
   && chmod -R 777 /app/bootstrap/cache /app/storage
 # run composer install to install the dependencies
-RUN test -n "$GITHUB_TOKEN" || (echo "GITHUB_TOKEN mancante: compilare sogei/.env.docker" && exit 1)
-# l'immagine composer usa l'ultima PHP: risolvi le dipendenze per la PHP dello stage "server"
-RUN composer config platform.php 8.2
+RUN test -n "$GITHUB_TOKEN" || (echo "GITHUB_TOKEN mancante: compilare sogei/.env" && exit 1)
+# installa esattamente le versioni di composer.lock (platform.php 8.2 e' fissato in composer.json)
+RUN test -f composer.lock || (echo "composer.lock mancante" && exit 1)
 RUN COMPOSER_AUTH="{\"github-oauth\":{\"github.com\":\"$GITHUB_TOKEN\"}}" composer install \
     --optimize-autoloader \
     --no-interaction \
