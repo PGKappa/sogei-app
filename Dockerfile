@@ -1,5 +1,7 @@
 FROM php:8.4-fpm-alpine AS server
 
+ARG GITHUB_TOKEN
+
 LABEL Maintainer="Guides4you srls" \
     Description="Lightweight container with Nginx & PHP-FPM based on Alpine Linux."
 
@@ -108,7 +110,8 @@ FROM composer:2 AS composer
 # copying the source directory and install the dependencies with composer
 COPY ./ /app
 # run composer install to install the dependencies
-RUN composer install \
+RUN composer config --global --auth github-oauth.github.com "$GITHUB_TOKEN" && \
+    composer install \
     --optimize-autoloader \
     --no-interaction \
     --no-progress
