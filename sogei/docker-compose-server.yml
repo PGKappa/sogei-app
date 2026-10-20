@@ -1,34 +1,34 @@
 version: '3.8'
 
 services:
-  sta-php:
-    image: sta-php:latest
-    container_name: sta-php
+  sog-php:
+    image: sog-php:latest
+    container_name: sog-php
     networks:
-      - sta_net
+      - sog_net
       - localstart_default
     expose:
       - 9000
 
-  sta-pgv:
-    image: sta-pgv:latest
-    container_name: sta-pgv
+  sog-pgv:
+    image: sog-pgv:latest
+    container_name: sog-pgv
     depends_on:
-      - sta-php
+      - sog-php
     networks:
-      - sta_net
+      - sog_net
     ports:
-      - "8080:80"
-  sta-viewer:
-    image: sta-viewer:latest
-    container_name: sta-viewer
+      - "8083:80"
+  sog-viewer:
+    image: sog-viewer:latest
+    container_name: sog-viewer
     networks:
-      - sta_net
+      - sog_net
     ports:
-      - "8090:80"
+      - "8093:80"
 
 networks:
-  sta_net:
+  sog_net:
     driver: bridge
   localstart_default:
     external: true

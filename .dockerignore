@@ -5,3 +5,6 @@ localstart
 rootfs-service
 .git
 localhost
+vendor
+
+sogei/.env.docker

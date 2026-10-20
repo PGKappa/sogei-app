@@ -19,7 +19,9 @@ services:
  
     build:
       args:
-        NOME_PARTNER: ${NOME_PARTNER}
+        - NOME_PARTNER=${NOME_PARTNER}
+        # senza valore: preso dall'ambiente (caricato da .env.docker), così il token non finisce nel file generato
+        - GITHUB_TOKEN
       context: ../.
       dockerfile: ./${NOME_PARTNER}/php/Dockerfile
     container_name: ${PHP_SERVICE}

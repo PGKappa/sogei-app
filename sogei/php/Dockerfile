@@ -1,4 +1,4 @@
-FROM php:8.4-fpm-alpine AS server
+FROM php:8.2-fpm-alpine AS server
 
 LABEL Maintainer="Guides4you srls" \
     Description="Lightweight container with Nginx & PHP-FPM based on Alpine Linux."
@@ -70,8 +70,7 @@ RUN apk add --no-cache --virtual .gettext gettext \
     && rm -rf /var/cache/apk/* 
 
 RUN apk add bash build-base gcc wget git autoconf libmcrypt-dev libzip-dev zip \
-    g++ make openssl-dev \
-    php84-pdo_mysql 
+    g++ make openssl-dev
 
 
 RUN apk add --no-cache --virtual .build-deps \
@@ -102,8 +101,9 @@ RUN python -m venv .venv
 RUN chmod -R 777 .venv
 RUN . .venv/bin/activate
 RUN /var/www/html/.venv/bin/python -m pip install drs
-RUN mkdir -p /usr/lib/python3.12/site-packages/drs
-RUN cp -R /var/www/html/.venv/lib/python3.12/site-packages/drs /usr/lib/python3.12/site-packages/
+# la versione di python dipende dalla release alpine dell'immagine base
+RUN SITE_PACKAGES="$(python3 -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')" \
+    && cp -R /var/www/html/.venv/lib/python3*/site-packages/drs "$SITE_PACKAGES/"
 
 RUN pecl install mcrypt && \
     docker-php-ext-enable mcrypt
@@ -125,6 +125,10 @@ RUN git config --global --add safe.directory /var/www/html/vendor/pgvirtual/mana
 RUN git config --global --add safe.directory /var/www/html/vendor/pgvirtual/game-dogs
 ARG NOME_PARTNER
 COPY ./${NOME_PARTNER}/php/rootfs/ /
+# build da Windows: rimuove eventuali CRLF (errore "/bin/sh^M: bad interpreter")
+RUN find /bin/docker-entrypoint.sh /bin/php-fpm-healthcheck.sh /docker-entrypoint-init.d -type f \
+      -exec sed -i 's/\r$//' {} + \
+    && chmod +x /bin/docker-entrypoint.sh /bin/php-fpm-healthcheck.sh /docker-entrypoint-init.d/*.sh
 # Let runit start nginx & php-fpm
 
 
@@ -145,13 +149,30 @@ ENV client_max_body_size=2M \
 
 FROM composer AS composer
 
+# token GitHub per i repository privati PGKappa/sogei-* (da sogei/.env.docker).
+# Resta in questo stage: l'immagine finale parte da "server" e non lo contiene.
+ARG GITHUB_TOKEN
+
 # copying the source directory and install the dependencies with composer
 COPY . /app
+# bootstrap/cache e storage/framework/{sessions,views} sono in .gitignore: artisan li richiede
+RUN mkdir -p /app/bootstrap/cache \
+    /app/storage/framework/cache/data \
+    /app/storage/framework/sessions \
+    /app/storage/framework/views \
+    /app/storage/logs \
+  && chmod -R 777 /app/bootstrap/cache /app/storage
 # run composer install to install the dependencies
-RUN composer install \
+RUN test -n "$GITHUB_TOKEN" || (echo "GITHUB_TOKEN mancante: compilare sogei/.env.docker" && exit 1)
+# l'immagine composer usa l'ultima PHP: risolvi le dipendenze per la PHP dello stage "server"
+RUN composer config platform.php 8.2
+RUN COMPOSER_AUTH="{\"github-oauth\":{\"github.com\":\"$GITHUB_TOKEN\"}}" composer install \
     --optimize-autoloader \
     --no-interaction \
     --no-progress
+# i pacchetti pgvirtual/* non hanno export-ignore: togli test e file di CI/git dal vendor
+RUN cd /app/vendor/pgvirtual \
+  && rm -rf */tests */ci */.gitlab */.gitlab-ci.yml */.gitignore
 
 # continue stage build with the desired image and copy the source including the
 # dependencies downloaded by composer
