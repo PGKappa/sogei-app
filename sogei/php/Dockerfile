@@ -178,5 +178,9 @@ RUN cd /app/vendor/pgvirtual \
 # dependencies downloaded by composer
 FROM server
 COPY --from=composer /app /var/www/html/
+# i run dei servizi runit puntano a scripts/*.sh: con CRLF lo shebang diventa "/bin/sh\r"
+# e runsv fallisce con "unable to start ./run: file does not exist"
+RUN sed -i 's/\r$//' /var/www/html/scripts/*.sh \
+    && chmod +x /var/www/html/scripts/*.sh
 
 EXPOSE 9000
