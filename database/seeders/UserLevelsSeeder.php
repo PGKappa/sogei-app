@@ -3,12 +3,20 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use DB;
-use PGVirtual\Core\Models\UserLevel;
-
+use Illuminate\Support\Facades\DB;
 
 class UserLevelsSeeder extends Seeder
 {
+    /**
+     * Rows exported from table `user_levels`.
+     */
+    private $rows = [
+        ['id' => 1, 'name' => 'player'],
+        ['id' => 2, 'name' => 'self'],
+        ['id' => 3, 'name' => 'selfap'],
+        ['id' => 4, 'name' => 'operator'],
+    ];
+
     /**
      * Run the database seeds.
      *
@@ -16,9 +24,8 @@ class UserLevelsSeeder extends Seeder
      */
     public function run()
     {
-        UserLevel::firstOrCreate(['id' => 1,'name' => 'player']);
-        UserLevel::firstOrCreate(['id' => 2,'name' => 'self']);
-        UserLevel::firstOrCreate(['id' => 3,'name' => 'selfap']);
-        UserLevel::firstOrCreate(['id' => 4,'name' => 'operator']);
+        foreach (array_chunk($this->rows, 200) as $chunk) {
+            DB::table('user_levels')->upsert($chunk, ['id']);
+        }
     }
 }

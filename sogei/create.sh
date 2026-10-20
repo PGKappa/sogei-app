@@ -32,10 +32,6 @@ echo 'Containers started.'
 
 docker commit $PHP_SERVICE $PHP_SERVICE:latest
 docker commit $NGINX_SERVICE $NGINX_SERVICE:latest
-if [ ! -d "./images" ]; then
-    mkdir images & cd images
-else 
-    cd images
-fi
+mkdir -p images && cd images || exit 1
 docker save -o $PHP_SERVICE.tar $PHP_SERVICE:latest
 docker save -o $NGINX_SERVICE.tar $NGINX_SERVICE:latest

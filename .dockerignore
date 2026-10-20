@@ -1,4 +1,5 @@
 *images*
+**/images
 .github
 .vscode
 localstart
@@ -10,3 +11,5 @@ localhost
 composer.lock
 
 github_token.txt
+
+storage/logs/*

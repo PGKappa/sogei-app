@@ -3,11 +3,17 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use DB;
-use PGVirtual\Core\Models\Currency;
+use Illuminate\Support\Facades\DB;
 
 class CurrencySeeder extends Seeder
 {
+    /**
+     * Rows exported from table `currencies`.
+     */
+    private $rows = [
+        ['id' => 1, 'name' => 'EUR'],
+    ];
+
     /**
      * Run the database seeds.
      *
@@ -15,10 +21,8 @@ class CurrencySeeder extends Seeder
      */
     public function run()
     {
-        Currency::firstOrCreate(
-            [
-           'name' => 'EUR'
-            ]
-        );
+        foreach (array_chunk($this->rows, 200) as $chunk) {
+            DB::table('currencies')->upsert($chunk, ['id']);
+        }
     }
 }

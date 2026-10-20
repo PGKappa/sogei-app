@@ -16,7 +16,9 @@ class DatabaseSeeder extends Seeder
         $this->call(UserLevelsSeeder::class);
         $this->call(GameSeeder::class);
         $this->call(VideosSeeder::class);
+        $this->call(VideoMetadataSeeder::class);
         $this->call(ChannelsSeeder::class);
+        $this->call(PalinsestoSeeder::class);
         $this->call(RacersRegistrySeeder::class);
         $this->call(OperatorsSeeder::class);
         $this->call(CurrencySeeder::class);
