@@ -8,7 +8,7 @@ kubectl exec xxxxxxx -n pgvirtual-dev -- sh -c "php /var/www/html/artisan pg:Tic
 
 kubectl exec xxxxxxx -n pgvirtual-dev -- sh -c "php /var/www/html/artisan pg:generateResults > /dev/null 2> /dev/null &"
 
-OLD DOCS
+OLD DOCS 
 
 # Aggiornamento  
 
