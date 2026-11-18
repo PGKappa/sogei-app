@@ -45,12 +45,16 @@ return [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
+            // scrivibile sia da php-fpm (www-data) sia dai comandi artisan lanciati come root
+            'permission' => 0666,
         ],
 
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
+            // scrivibile sia da php-fpm (www-data) sia dai comandi artisan lanciati come root
+            'permission' => 0666,
             'days' => 14,
         ],
 

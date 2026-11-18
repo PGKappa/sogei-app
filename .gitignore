@@ -12,3 +12,6 @@ storage/logs/*
 sogei/docker-compose-create.yml
 
 github_token.txt
+# configurazioni con password: solo in locale
+.env
+.env.production

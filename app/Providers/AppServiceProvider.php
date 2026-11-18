@@ -30,7 +30,10 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         date_default_timezone_set('UTC');
         //Passport::routes();
-        if ((config('app.env') === 'production') || (config('app.env') === 'staging')) {
+        // https forzato solo se l'app è pubblicata in https (APP_URL): con nginx in http
+        // gli URL generati (form dei pannelli, redirect) punterebbero a https e non funzionerebbero
+        if (in_array(config('app.env'), ['production', 'staging'], true)
+            && str_starts_with((string) config('app.url'), 'https://')) {
             \URL::forceScheme('https');
         }
     }

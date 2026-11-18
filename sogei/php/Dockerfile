@@ -116,6 +116,13 @@ ARG GITHUB_TOKEN
 
 # copying the source directory and install the dependencies with composer
 COPY . /app
+# configurazione di produzione: .env.production (accanto a composer.json) diventa il .env dell'immagine,
+# al posto del .env di sviluppo copiato sopra. Il build si ferma se manca.
+RUN test -f /app/.env.production || (echo ".env.production mancante: copiare .env.production.example e compilarlo" && exit 1)
+RUN grep -q '^APP_KEY=base64:' /app/.env.production || (echo "APP_KEY vuota in .env.production" && exit 1)
+RUN cp /app/.env.production /app/.env \
+  && sed -i 's/\r$//' /app/.env \
+  && rm -f /app/.env.production /app/.env.production.example
 # bootstrap/cache e storage/framework/{sessions,views} sono in .gitignore: artisan li richiede
 RUN mkdir -p /app/bootstrap/cache \
     /app/storage/framework/cache/data \

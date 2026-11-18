@@ -21,6 +21,8 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\ApplyConfiguredRtp::class,
+        \App\Http\Middleware\FixViewerGameDuration::class,
     ];
 
     /**
@@ -63,6 +65,8 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'integration' => \App\Http\Middleware\Integration::class,
+        'rtp.auth' => \App\Http\Middleware\RtpPanelAuth::class,
+        'tech.auth' => \App\Http\Middleware\TechPanelAuth::class,
         'session.validate.remote' => \App\Http\Middleware\ValidateRemoteSession::class,
         'session.validate.local' => \App\Http\Middleware\ValidateLocalSession::class,
     ];

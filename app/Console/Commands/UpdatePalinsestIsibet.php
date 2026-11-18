@@ -41,19 +41,19 @@ class UpdatePalinsestIsibet extends Command
     public function handle()
     {
 
-        $channels = Channel::all();
-            
+        foreach (Channel::all() as $ch) {
+            // solo eventi del canale, inviati e ancora aperti (esclude annullati e status 9 di chiusura palinsesto, mai inviati a Isibet)
+            $events = Event::where('channel_id', $ch->id)
+                ->where('status', Event::STATUS_CREATED)
+                ->whereNotNull('sent_on')
+                ->whereNull('ext_pal_id')
+                ->orderBy('time')
+                ->get();
 
-            foreach($channels as $ch){
-                $events = Event::whereNotNull('sent_on')->whereNull('ext_pal_id')->get();
-
-                foreach ($events as $event) {
-                    IsibetLib::getPalinsesto($event->id, $ch);
-                }
+            foreach ($events as $event) {
+                IsibetLib::getPalinsesto($event->id, $ch->isibet_controller_id);
             }
-
-        
-        
+        }
 
         return 0;
     }

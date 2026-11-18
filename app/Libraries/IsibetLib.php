@@ -4,6 +4,7 @@ namespace App\Libraries;
 
 
 use App\Libraries\ADMConfigs;
+use App\Libraries\RtpConfig;
 use Carbon\Carbon;
 use Exception;
 use Faker\Core\Number;
@@ -24,6 +25,13 @@ use UnableToLoadConfigsException;
 
 class IsibetLib
 {
+    /** event_id => [market => rtp] usati nell'ultima create_event_card2 */
+    public static $rtpUsedByEvent = [];
+
+    public static function rtpUsedFor($eventId): array
+    {
+        return self::$rtpUsedByEvent[$eventId] ?? [];
+    }
 
     /* swagger https://wstest.isibet.it/pgvirtualinterface/swagger/index.html */
 
@@ -324,7 +332,11 @@ class IsibetLib
             ];
         }
 
-        $oddsConfig = array('winnerProbs' => $winnerProbs);
+        /* RTP impostati dal pannello /rtp (vuoto = default della libreria) */
+        $rtpOptions = RtpConfig::oddsOptionsForEvent($event, (int) $game['id']);
+        self::$rtpUsedByEvent[$event->id] = RtpConfig::fromOddsOptions($rtpOptions);
+
+        $oddsConfig = array_merge(array('winnerProbs' => $winnerProbs), $rtpOptions);
 
 
         $oddsControllerClass = 'PGVirtual\\Game' . ucfirst(strtolower($game['name'])) . '\\Controllers\\OddsController';

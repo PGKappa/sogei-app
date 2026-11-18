@@ -26,18 +26,32 @@ ls -l /var/www/html
 #sleep 10s
 #php artisan pg:publishEventsToIsibet &
 php-fpm --nodaemonize &
-php artisan key:generate
+# APP_KEY fissa in .env.production: rigenerarla a ogni avvio invaliderebbe sessioni e dati cifrati
+grep -q '^APP_KEY=base64:' .env || php artisan key:generate --force
 chown -R www-data:www-data /var/www/html
+# storage e cache scrivibili anche se un comando artisan lanciato a mano come root crea file
+chmod -R ug+rwX /var/www/html/storage /var/www/html/bootstrap/cache
 chmod +x /var/www/html/vendor/pgvirtual/game-dogs/src/Libraries/drs_exec.py 
 chmod +x /var/www/html/vendor/pgvirtual/game-horses/src/Libraries/drs_exec.py 
 chmod +x /var/www/html/vendor/pgvirtual/game-harness/src/Libraries/drs_exec.py 
 
-mkdir -p /etc/service/result
-mkdir -p /etc/service/isibet
-mkdir -p /etc/service/syncresult
-ln -s /var/www/html/scripts/service-1.sh /etc/service/result/run
-ln -s /var/www/html/scripts/service-3.sh /etc/service/isibet/run
-ln -s /var/www/html/scripts/service-4.sh /etc/service/syncresult/run
+# servizi runit eseguiti come www-data (come php-fpm): se girano come root creano i log
+# (laravel.log, laravel-AAAA-MM-GG.log) di root e php-fpm non riesce più a scriverli
+# -> "Failed to open stream: Permission denied" su tutte le pagine.
+# Le librerie dei giochi (sotto hash) scrivono results.json e rng.log con percorso relativo,
+# cioè nella cartella di lavoro del processo: ogni servizio parte quindi da una sua cartella
+# scrivibile da www-data, /var/www/html/storage/services/<servizio>/ (non /etc/service/<servizio>, di root).
+add_service() {
+  workdir="/var/www/html/storage/services/$1"
+  mkdir -p "/etc/service/$1" "$workdir"
+  chown www-data:www-data "$workdir"
+  rm -f "/etc/service/$1/run"
+  printf '#!/bin/sh\ncd %s || exit 1\nexec chpst -u www-data:www-data %s\n' "$workdir" "$2" > "/etc/service/$1/run"
+  chmod +x "/etc/service/$1/run"
+}
+add_service result /var/www/html/scripts/service-1.sh
+add_service isibet /var/www/html/scripts/service-3.sh
+add_service syncresult /var/www/html/scripts/service-4.sh
 
 cd /var/www/html
 echo "end pgv"

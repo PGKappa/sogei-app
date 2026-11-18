@@ -74,6 +74,18 @@ if (-not $env:GITHUB_TOKEN) {
     exit 1
 }
 
+# Configurazione di produzione: ..\.env.production diventa il .env dell'immagine (vedi php\Dockerfile)
+$envProd = Join-Path $PSScriptRoot "..\.env.production"
+if (-not (Test-Path $envProd)) {
+    Log ".env.production mancante: copiare ..\.env.production.example in ..\.env.production e compilarlo"
+    exit 1
+}
+$envProdLines = [System.IO.File]::ReadAllLines($envProd)
+if (-not ($envProdLines -match '^APP_KEY=base64:')) {
+    Log "APP_KEY vuota in .env.production: generarla con  php artisan key:generate --show"
+    exit 1
+}
+
 $StartTime = Get-Date
 
 Log "Inizio creazione immagini Docker di produzione - partner: $($env:NOME_PARTNER)"
@@ -82,6 +94,7 @@ Write-Log "  Host:           $env:COMPUTERNAME"
 Write-Log "  Sistema:        $($os.Caption) $($os.Version)"
 Write-Log "  Docker:         $(Get-CommandOutput { docker --version })"
 Write-Log "  Docker Compose: $(Get-CommandOutput { docker-compose version --short })"
+Write-Log "  Configurazione: .env.production ($(($envProdLines -match '^(APP_ENV|APP_DEBUG|APP_URL|DB_HOST|DB_DATABASE)=') -join ' '))"
 $composerLock = Join-Path $PSScriptRoot "..\composer.lock"
 Write-Log "  Librerie pgvirtual:"
 $lock = [System.IO.File]::ReadAllText((Resolve-Path $composerLock).Path) | ConvertFrom-Json

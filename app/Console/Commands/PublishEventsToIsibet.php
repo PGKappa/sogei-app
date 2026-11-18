@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Libraries\IsibetLib;
+use App\Models\EventRtp;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
@@ -100,6 +101,15 @@ class PublishEventsToIsibet extends Command
                                     $event = Event::where('id', $e['eventId'])->first();
                                     $event->sent_on = $date_sent_on;
                                     $event->save();
+                                    /* snapshot dell'RTP inviato: il viewer mostrerà le stesse quote */
+                                    try {
+                                        EventRtp::updateOrCreate(
+                                            ['event_id' => $event->id],
+                                            ['game_id' => $ch->game_id, 'rtp' => json_encode(IsibetLib::rtpUsedFor($event->id))]
+                                        );
+                                    } catch (Exception $ex) {
+                                        Log::error("RTP snapshot non salvato per evento " . $event->id . ": " . $ex->getMessage());
+                                    }
                                     if ($isibetLog == "true") {
                                         EventExt::create(
                                             ['event_id' => $event->id, 'isibet_eventcard' => json_encode(array("transactionId" => $eventCardMessage['transactionId'], "messageDateTime" => $eventCardMessage['messageDateTime'], "eventcard" => $e))]

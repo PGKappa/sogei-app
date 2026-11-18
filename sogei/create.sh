@@ -49,6 +49,17 @@ if [ -z "$GITHUB_TOKEN" ]; then
     exit 1
 fi
 
+# Configurazione di produzione: ../.env.production diventa il .env dell'immagine (vedi php/Dockerfile)
+ENV_PROD="../.env.production"
+if [ ! -f "$ENV_PROD" ]; then
+    log ".env.production mancante: copiare ../.env.production.example in ../.env.production e compilarlo"
+    exit 1
+fi
+if ! grep -q '^APP_KEY=base64:' "$ENV_PROD"; then
+    log "APP_KEY vuota in .env.production: generarla con  php artisan key:generate --show"
+    exit 1
+fi
+
 START_TS=$(date +%s)
 
 log "Inizio creazione immagini Docker di produzione - partner: $NOME_PARTNER"
@@ -56,6 +67,7 @@ echo "  Host:           $(hostname)"
 echo "  Sistema:        $(uname -srm)"
 echo "  Docker:         $(docker --version)"
 echo "  Docker Compose: $(docker-compose version --short)"
+echo "  Configurazione: .env.production ($(grep -E '^(APP_ENV|APP_DEBUG|APP_URL|DB_HOST|DB_DATABASE)=' "$ENV_PROD" | sed 's/\r$//' | tr '\n' ' '))"
 echo "  Librerie pgvirtual:"
 grep -A5 '"name": "pgvirtual/' ../composer.lock | grep -E '"name"|"version"|"reference"' \
     | sed -E 's/.*"(name|version|reference)": "([^"]+)".*/\2/' | paste - - - \
